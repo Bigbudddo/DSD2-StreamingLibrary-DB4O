@@ -114,22 +114,37 @@ public class LibraryDAO {
 		return items;
 	}
 	
-	public User getUserByID(int id) throws Exception {
+	public User getUserByID(int id) {
 		User proto = new User(id, null, null, null, null);
-		User u = (User)db.queryByExample(proto).next();
-		return u;
+		ObjectSet result = db.queryByExample(proto);
+		if (result.size() > 0) {
+			return (User)result.next();
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public Playlist getPlaylistByID(int id) throws Exception {
 		Playlist proto = new Playlist(id, null, null);
-		Playlist p = (Playlist)db.queryByExample(proto).next();
-		return p;
+		ObjectSet result = db.queryByExample(proto);
+		if (result.size() > 0) {
+			return (Playlist)result.next();
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public Item getItemByID(int id) throws Exception {
 		Item proto = new Item(id, null, null, 0);
-		Item i = (Item)db.queryByExample(proto).next();
-		return i;
+		ObjectSet result = db.queryByExample(proto);
+		if (result.size() > 0) {
+			return (Item)result.next();
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public void storeUser(User u) {
@@ -145,6 +160,13 @@ public class LibraryDAO {
 	public void storeItem(Item i) {
 		db.store(i);
 		db.commit();
+	}
+	
+	public void updateUser(User nu) {
+		User u = getUserByID(nu.getUserID());
+		if (u != null) {
+			
+		}
 	}
 	
 	public void deleteUser(int id) throws Exception {
