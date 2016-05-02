@@ -31,6 +31,12 @@ public class Playlist {
 	public Playlist(Object o) {
 	}
 	
+	public Playlist(int playlistID, User user) {
+		this.playlistID = playlistID;
+		this.user = user;
+		this.items = new LinkedList<Item>();
+	}
+	
 	public Playlist(int playlistID, User user, List<Item> items) {
 		this.playlistID = playlistID;
 		this.user = user;

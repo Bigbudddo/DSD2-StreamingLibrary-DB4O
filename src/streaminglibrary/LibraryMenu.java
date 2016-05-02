@@ -1,7 +1,6 @@
 package streaminglibrary;
 
 import java.util.List;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -22,7 +21,7 @@ public class LibraryMenu {
 		try {
 			inputReader = new Scanner(System.in);
 			librarydao = new LibraryDAO();
-			setupInitialObjects(); //create the initial items in the DB
+			setupInitialObjects(); //create the initial items in the DB (Scenario 1)
 			do {
 				System.out.println("----------------------------");
 				System.out.println("// Streaming Library");
@@ -36,19 +35,20 @@ public class LibraryMenu {
 						librarydao.getNumberOfItems());
 				System.out.println("----------------------------");
 				System.out.println("// Select an Option:");
-				System.out.println("// 1. Register a new User");
-				System.out.println("// 2. Create a new Playlist");
-				System.out.println("// 3. Create a new Item");
-				System.out.println("// 4. List all Users");
-				System.out.println("// 5. List all Playlists");
-				System.out.println("// 6. List all Items");
+				System.out.println("// 1. Register a new User - (Scenario 1)");
+				System.out.println("// 2. Create a new Playlist - (Scenario 1)");
+				System.out.println("// 3. Create a new Item - (Scenario 1)");
+				System.out.println("// 4. List all Users - (Scenario 2)");
+				System.out.println("// 5. List all Playlists - (Scenario 2)");
+				System.out.println("// 6. List all Items - (Scenario 2)");
 				System.out.println("// 7. Get a Specified User");
-				System.out.println("// 8. Get a Specified Playlist");
+				System.out.println("// 8. Get a Specified Playlist - (Scenario 3)");
 				System.out.println("// 9. Get a Specified Item");
-				System.out.println("// A. Update Playlist");
-				System.out.println("// B. Delete a User");
-				System.out.println("// C. Get Playlists by User");
+				System.out.println("// A. Update Playlist - (Scenario 4)");
+				System.out.println("// B. Delete a User - (Scenario 5)");
+				System.out.println("// C. Get Playlists by User - (Scenario 6)");
 				System.out.println("// D. Find Item on Playlists");
+				System.out.println("// E. List Playlist Details - (Scenario 7)");
 				System.out.println("----------------------------");
 				System.out.println("// 'Q' or 'q' to Quit");
 				System.out.println("----------------------------");
@@ -100,13 +100,17 @@ public class LibraryMenu {
 					case 'd':
 						ListPlaylistsByItemID();
 						break;
+					case 'E':
+					case 'e':
+						ListItemsByPlaylistID();
+						break;
 					case 'Q':
 					case 'q':
 						runLoop = false;
 				}
 				
-			} while (runLoop);
-			
+			} 
+			while (runLoop);
 			System.out.println("Streaming Library Closing down...");
 			inputReader.close();
 			librarydao.close();
@@ -116,60 +120,75 @@ public class LibraryMenu {
 		}
 	}
 	
-	public static void setupInitialObjects() throws IOException {
-		//Create some Items
-		Item i1 = new Item(1, "Love Gun", "KISS", 3.1);
-		Item i2 = new Item(2, "7 Years", "Lukas Graham", 3.5);
-		Item i3 = new Item(3, "Baba O'Riley", "The Who", 5.0);
-		Item i4 = new Item(4, "Hotel California", "The Eagles", 6.3);
-		ClassicalItem i5 = new ClassicalItem(5, "Ride of the Valkyries", 
-				"Edison Records", "Richard Wagner", 3.0);
-		//Store the Items in the DB
-		librarydao.storeItem(i1);
-		librarydao.storeItem(i2);
-		librarydao.storeItem(i3);
-		librarydao.storeItem(i4);
-		librarydao.storeItem(i5);
-		//Create some Users
-		User u1 = new User(1, "Stuart", "password", "stuart@email.com");
-		User u2 = new User(2, "Alex", "password2", "alex@email.com");
-		//Create some Playlists
-		//First create some item lists
-		List<Item> li1 = new LinkedList<Item>();
-		li1.add(i1);
-		li1.add(i3);
-		li1.add(i5);
-		//Second
-		List<Item> li2 = new LinkedList<Item>();
-		li2.add(i2);
-		li2.add(i5);
-		//Third
-		List<Item> li3 = new LinkedList<Item>();
-		li3.add(i2);
-		li3.add(i4);
-		//Create the playlists
-		Playlist p1 = new Playlist(1, u1, li1);
-		Playlist p2 = new Playlist(2, u2, li2);
-		Playlist p3 = new Playlist(3, u1, li3);
-		//Assign them to the users
-		u1.addPlaylist(p1);
-		u1.addPlaylist(p3);
-		u2.addPlaylist(p2);
-		//Store Users
-		librarydao.storeUser(u1);
-		librarydao.storeUser(u2);
-		//Store Playlists
-		librarydao.storePlaylist(p1);
-		librarydao.storePlaylist(p2);
-		librarydao.storePlaylist(p3);
+	public static void setupInitialObjects() {
+		try {
+			//Create some Items
+			Item i1 = new Item(1, "Love Gun", "KISS", 3.1);
+			Item i2 = new Item(2, "7 Years", "Lukas Graham", 3.5);
+			Item i3 = new Item(3, "Baba O'Riley", "The Who", 5.0);
+			Item i4 = new Item(4, "Hotel California", "The Eagles", 6.3);
+			ClassicalItem i5 = new ClassicalItem(5, "Ride of the Valkyries", 
+					"Edison Records", "Richard Wagner", 3.0);
+			//Store the Items in the DB
+			librarydao.storeItem(i1);
+			librarydao.storeItem(i2);
+			librarydao.storeItem(i3);
+			librarydao.storeItem(i4);
+			librarydao.storeItem(i5);
+			//Create some Users
+			User u1 = new User(1, "Stuart", "password", "stuart@email.com");
+			User u2 = new User(2, "Alex", "password2", "alex@email.com");
+			//Create some Playlists
+			//First create some item lists
+			List<Item> li1 = new LinkedList<Item>();
+			li1.add(i1);
+			li1.add(i3);
+			li1.add(i5);
+			//Second
+			List<Item> li2 = new LinkedList<Item>();
+			li2.add(i2);
+			li2.add(i5);
+			//Third
+			List<Item> li3 = new LinkedList<Item>();
+			li3.add(i2);
+			li3.add(i4);
+			//Create the playlists
+			Playlist p1 = new Playlist(1, u1, li1);
+			Playlist p2 = new Playlist(2, u2, li2);
+			Playlist p3 = new Playlist(3, u1, li3);
+			//Assign them to the users
+			u1.addPlaylist(p1);
+			u1.addPlaylist(p3);
+			u2.addPlaylist(p2);
+			//Store Users
+			librarydao.storeUser(u1);
+			librarydao.storeUser(u2);
+			//Store Playlists
+			librarydao.storePlaylist(p1);
+			librarydao.storePlaylist(p2);
+			librarydao.storePlaylist(p3);
+		}
+		catch (Exception ex) {
+			System.out.println("Failed to setup initial objects with exception: " + ex.getMessage());
+			runLoop = false;
+		}
 	}
 	
 	public static void RegisterNewUser() {
 		try {
 			int newUserID = librarydao.getNextUserID();
 			System.out.println("Registering a new User with ID: " + newUserID);
-			System.out.print("Enter Username: ");
-			String username = inputReader.next();
+			String username = "";
+			boolean userflag = true;
+			do {
+				System.out.print("Enter Username: ");
+				username = inputReader.next();
+				userflag = librarydao.checkUsernameExists(username);
+				if (userflag) {
+					System.out.println("User already exists in the System...");
+				}
+			}
+			while (userflag && username == "");
 			System.out.print("Enter Password: ");
 			String password = inputReader.next();
 			System.out.print("Enter Email Address: ");
@@ -201,7 +220,6 @@ public class LibraryMenu {
 		try {
 			int newPlaylistID = librarydao.getNextPlaylistID();
 			System.out.println("Creating a new Playlist with ID: " + newPlaylistID);
-			List<Item> playlistItems = new LinkedList<Item>();
 			String input = "";
 			User u = null;
 			if (o == null) {
@@ -213,9 +231,10 @@ public class LibraryMenu {
 			else { u = o; }
 			if (u != null) {
 				System.out.println("User Selected: " + u);
+				Playlist p = new Playlist(newPlaylistID, u);
 				do {
 					System.out.println("----------------------------");
-					ListAllItems();
+					ListAllItemsNotInPlaylist(p);
 					System.out.println("----------------------------");
 					System.out.println("'f' to finish or 'b' to cancel");
 					System.out.print("Item Choice: ");
@@ -224,7 +243,7 @@ public class LibraryMenu {
 						int selectedItem = Integer.parseInt(input);
 						Item i = librarydao.getItemByID(selectedItem);
 						if (i != null) {
-							playlistItems.add(i);
+							p.addItem(i);
 						}
 						else {
 							System.out.println("Item does not exists.");
@@ -236,7 +255,6 @@ public class LibraryMenu {
 				
 				if (input.charAt(0) == 'f' || input.charAt(0) == 'F') {
 					System.out.println("Creating Playlist...");
-					Playlist p = new Playlist(newPlaylistID, u, playlistItems);
 					u.addPlaylist(p);
 					librarydao.storeUser(u);
 					librarydao.storePlaylist(p);
@@ -349,15 +367,17 @@ public class LibraryMenu {
 	public static void ListUserByID() {
 		try {
 			System.out.print("Enter User ID to search: ");
-			inputChoice = inputReader.next().charAt(0);
-			int selectedID = Integer.parseInt(String.valueOf(inputChoice));
-			System.out.println("Trying to find User with ID: " + selectedID);
-			User u = librarydao.getUserByID(selectedID);
-			if (u != null) {
-				System.out.println(u);
-			}
-			else {
-				System.out.println("Unable to find User");
+			String input = inputReader.next();
+			if (tryParseInt(input)) {
+				int selectedID = Integer.parseInt(input);
+				System.out.println("Trying to find User with ID: " + selectedID);
+				User u = librarydao.getUserByID(selectedID);
+				if (u != null) {
+					System.out.println(u);
+				}
+				else {
+					System.out.println("Unable to find User");
+				}
 			}
 		}
 		catch (Exception ex) {
@@ -368,15 +388,17 @@ public class LibraryMenu {
 	public static void ListPlaylistByID() {
 		try {
 			System.out.print("Enter Playlist ID to search: ");
-			inputChoice = inputReader.next().charAt(0);
-			int selectedID = Integer.parseInt(String.valueOf(inputChoice));
-			System.out.println("Trying to find Playlist with ID: " + selectedID);
-			Playlist p = librarydao.getPlaylistByID(selectedID);
-			if (p != null) {
-				System.out.println(p);
-			}
-			else {
-				System.out.println("Unable to find Playlist");
+			String input = inputReader.next();
+			if (tryParseInt(input)) {
+				int selectedID = Integer.parseInt(input);
+				System.out.println("Trying to find Playlist with ID: " + selectedID);
+				Playlist p = librarydao.getPlaylistByID(selectedID);
+				if (p != null) {
+					System.out.println(p);
+				}
+				else {
+					System.out.println("Unable to find Playlist");
+				}
 			}
 		}
 		catch (Exception ex) {
@@ -387,16 +409,18 @@ public class LibraryMenu {
 	public static void ListItemByID() {
 		try {
 			System.out.print("Enter Item ID to search: ");
-			inputChoice = inputReader.next().charAt(0);
-			int selectedID = Integer.parseInt(String.valueOf(inputChoice));
-			System.out.println("Trying to find Item with ID: " + selectedID);
-			Item i = librarydao.getItemByID(selectedID);
-			if (i != null) {
-				System.out.println(i);
-			}
-			else {
-				System.out.println("Unable to find Item");
-			}
+			String input = inputReader.next();
+			if (tryParseInt(input)) {
+				int selectedID = Integer.parseInt(input);
+				System.out.println("Trying to find Item with ID: " + selectedID);
+				Item i = librarydao.getItemByID(selectedID);
+				if (i != null) {
+					System.out.println(i);
+				}
+				else {
+					System.out.println("Unable to find Item");
+				}
+			}			
 		}
 		catch (Exception ex) {
 			System.out.println("Unable to find Item with exception: " + ex.getMessage());
@@ -503,10 +527,12 @@ public class LibraryMenu {
 	public static void DeleteUserByID() {
 		try {
 			System.out.print("Enter User ID to delete: ");
-			inputChoice = inputReader.next().charAt(0);
-			int selectedID = Integer.parseInt(String.valueOf(inputChoice));
-			librarydao.deleteUser(selectedID);
-			System.out.println("Deleted User with ID: " + selectedID);
+			String input = inputReader.next();
+			if (tryParseInt(input)) {
+				int selectedID = Integer.parseInt(input);
+				librarydao.deleteUser(selectedID);
+				System.out.println("Deleted User with ID: " + selectedID);
+			}
 		}
 		catch (Exception ex) {
 			System.out.println("Failed to Delete User");
@@ -516,13 +542,15 @@ public class LibraryMenu {
 	public static void ListPlaylistsByUserID() {
 		try {
 			System.out.print("Enter User ID to retrieve Playlists: ");
-			inputChoice = inputReader.next().charAt(0);
-			int selectedID = Integer.parseInt(String.valueOf(inputChoice));
-			List<Playlist> playlistsInDb = librarydao.getPlaylistsByUser(selectedID);
-			System.out.println(playlistsInDb.size() + " playlist(s) found created for User ID: " + selectedID);
-			for (Iterator<Playlist> i = playlistsInDb.iterator(); i.hasNext();) {
-				Playlist p = (Playlist)i.next();
-				System.out.println(p);
+			String input = inputReader.next();
+			if (tryParseInt(input)) {
+				int selectedID = Integer.parseInt(input);
+				List<Playlist> playlistsInDb = librarydao.getPlaylistsByUser(selectedID);
+				System.out.println(playlistsInDb.size() + " playlist(s) found created for User ID: " + selectedID);
+				for (Iterator<Playlist> i = playlistsInDb.iterator(); i.hasNext();) {
+					Playlist p = (Playlist)i.next();
+					System.out.println(p);
+				}
 			}
 		}
 		catch (Exception ex) {
@@ -533,17 +561,48 @@ public class LibraryMenu {
 	public static void ListPlaylistsByItemID() {
 		try {
 			System.out.print("Enter Item ID to retrieve Playlists: ");
-			inputChoice = inputReader.next().charAt(0);
-			int selectedID = Integer.parseInt(String.valueOf(inputChoice));
-			List<Playlist> playlistsInDb = librarydao.getPlaylistsByItem(selectedID);
-			System.out.println(playlistsInDb.size() + " playlist(s) found containing Item ID: " + selectedID);
-			for (Iterator<Playlist> i = playlistsInDb.iterator(); i.hasNext();) {
-				Playlist p = (Playlist)i.next();
-				System.out.println(p);
+			String input = inputReader.next();
+			if (tryParseInt(input)) {
+				int selectedID = Integer.parseInt(input);
+				List<Playlist> playlistsInDb = librarydao.getPlaylistsByItem(selectedID);
+				System.out.println(playlistsInDb.size() + " playlist(s) found containing Item ID: " + selectedID);
+				for (Iterator<Playlist> i = playlistsInDb.iterator(); i.hasNext();) {
+					Playlist p = (Playlist)i.next();
+					System.out.println(p);
+				}
 			}
 		}
 		catch (Exception ex) {
 			System.out.println("Failed to get Playlists with exception: " + ex.getMessage());
+		}
+	}
+	
+	public static void ListItemsByPlaylistID() {
+		try {
+			System.out.print("Enter Playlist ID to retrieve information on: ");
+			String input = inputReader.next();
+			if (tryParseInt(input)) {
+				int selectedID = Integer.parseInt(input);
+				Playlist p = librarydao.getPlaylistByID(selectedID);
+				if (p != null) {
+					User u = p.getUser();
+					System.out.println("----------------------------");
+					System.out.println("Playlist Details");
+					System.out.println("Created by: " + u);
+					System.out.println("Items:");
+					ListAllItemsInPlaylist(p);
+					System.out.println("----------------------------");
+				}
+				else {
+					System.out.println("Unable to find Playlist with ID " + selectedID);
+				}
+			}
+			else {
+				System.out.println("Invalid input, unable to get Playlist information");
+			}
+		}
+		catch (Exception ex) {
+			System.out.println("Failed to get Items in the Playlist with exception: " + ex.getMessage());
 		}
 	}
 	

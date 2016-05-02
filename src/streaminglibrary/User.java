@@ -38,12 +38,7 @@ public class User {
 		this.playlists = new LinkedList<Playlist>();
 	}
 	
-	public User(Object o) {
-		
-	}
-	
-	public User(String username) {
-		
+	public User(Object o) {	
 	}
 	
 	public User(int userID, String username, String password, String email) {

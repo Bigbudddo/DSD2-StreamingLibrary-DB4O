@@ -4,14 +4,13 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
-import com.db4o.query.Predicate;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Iterator;
 import java.util.LinkedList;
 
+@SuppressWarnings("rawtypes")
 public class LibraryDAO {
 	
 	private final File file;
@@ -95,6 +94,15 @@ public class LibraryDAO {
 		}
 		while (!flag);
 		return val;
+	}
+		
+	public boolean checkUsernameExists(String checkValue) {
+		User proto = new User(0, checkValue, null, null, null);
+		ObjectSet result = db.queryByExample(proto);
+		if (result.size() > 0) {
+			return true;
+		}
+		else { return false; }
 	}
 	
 	public List<User> getAllUsers() {
@@ -189,10 +197,11 @@ public class LibraryDAO {
 		db.commit();
 	}
 	
-	public void deleteUser(int id) throws Exception {
-		User proto = new User(id, null, null, null, null);
-		User u = (User)db.queryByExample(proto).next();
-		db.delete(u);
+	public void deleteUser(int id) {
+		User u = getUserByID(id);
+		if (u != null) {
+			db.delete(u);
+		}
 	}
 	
 	public void deletePlaylist(int id) {
@@ -202,33 +211,3 @@ public class LibraryDAO {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

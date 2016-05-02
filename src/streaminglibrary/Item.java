@@ -18,12 +18,13 @@ public class Item {
 	public void setLength(double value) { length = value; }
 	
 	public Item() {
+		itemID = 0;
 		title = null;
 		artist = null;
+		length = 0.0;
 	}
 	
 	public Item(Object o) {
-		
 	}
 	
 	public Item(int itemID, String title, String artist, double length) {
