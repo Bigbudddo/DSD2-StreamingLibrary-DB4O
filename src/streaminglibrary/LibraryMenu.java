@@ -89,6 +89,7 @@ public class LibraryMenu {
 						break;
 					case 'B':
 					case 'b':
+						DeleteUserByID();
 						break;
 					case 'C':
 					case 'c':
@@ -161,7 +162,13 @@ public class LibraryMenu {
 	}
 	
 	public static void RegisterNewUser() {
-		
+		try {
+			int newUserID = librarydao.getNextUserID();
+			System.out.println("Registering a new User with ID: " + newUserID);
+		}
+		catch (Exception ex) {
+			System.out.println("Failed to Register new User");
+		}
 	}
 	
 	public static void CreateNewPlaylist() {
@@ -169,7 +176,49 @@ public class LibraryMenu {
 	}
 	
 	public static void CreateNewItem() {
-		
+		try {
+			int newItemID = librarydao.getNextItemID();
+			System.out.println("Creating a new Item with ID: " + newItemID);
+			System.out.println("Select Category:");
+			System.out.println("1. Item");
+			System.out.println("2. Classical Item");
+			System.out.print("Which Category?: ");
+			inputChoice = inputReader.next().charAt(0);
+			
+			if (inputChoice == '1' || inputChoice == '2') {
+				System.out.print("Enter Item Title: ");
+				String title = inputReader.next();
+				System.out.print("Enter Item Artist: ");
+				String artist = inputReader.next();
+				System.out.print("Enter Item Length: ");
+				double length = inputReader.nextDouble();
+				
+				Item i = null;
+				if (inputChoice == '2') {
+					System.out.print("Enter Composer: ");
+					String composer = inputReader.next();
+					System.out.println("Creating new Item...");
+					i = new ClassicalItem(newItemID, title, artist, composer, length);
+				}
+				else {
+					System.out.println("Creating new Item...");
+					i = new Item(newItemID, title, artist, length);
+				}
+				
+				System.out.println("Finished Item creation: ");
+				System.out.println(i);
+				System.out.println("Storing new Item");
+				librarydao.storeItem(i);
+				System.out.println("Item stored successfully..");
+			}
+			else {
+				System.out.println("Unrecognised Category.");
+				System.out.println("Failed to create new Item");
+			}
+		}
+		catch (Exception ex) {
+			System.out.println("Failed to create new Item");
+		}
 	}
 	
 	
@@ -241,5 +290,17 @@ public class LibraryMenu {
 			System.out.println("Unable to find Item");
 		}
 	}
-
+	
+	public static void DeleteUserByID() {
+		try {
+			System.out.print("Enter User ID to delete: ");
+			inputChoice = inputReader.next().charAt(0);
+			int selectedID = Integer.parseInt(String.valueOf(inputChoice));
+			librarydao.deleteUser(selectedID);
+			System.out.println("Deleted User with ID: " + selectedID);
+		}
+		catch (Exception ex) {
+			System.out.println("Failed to Delete User");
+		}
+	}
 }

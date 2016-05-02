@@ -55,8 +55,45 @@ public class LibraryDAO {
 	
 	public int getNextUserID() {
 		int val = getNumberOfUsers() + 1;
+		boolean flag = false;
+		do {
+			User proto = new User(val, null, null, null, null);
+			if (db.queryByExample(proto).size() == 0) {
+				//We have found an value that no other User has as an ID
+				flag = true;
+			}
+			else { val++; }
+		}
+		while (!flag);
 		return val;
-		//TODO: finish
+	}
+	
+	public int getNextPlaylistID() {
+		int val = getNumberOfPlaylists() + 1;
+		boolean flag = false;
+		do {
+			Playlist proto = new Playlist(val, null, null);
+			if (db.queryByExample(proto).size() == 0) {
+				flag = true;
+			}
+			else { val++; }
+		}
+		while (!flag);
+		return val;
+	}
+	
+	public int getNextItemID() {
+		int val = getNumberOfItems() + 1;
+		boolean flag = false;
+		do {
+			Item proto = new Item(val, null, null, 0);
+			if (db.queryByExample(proto).size() == 0) {
+				flag = true;
+			}
+			else { val++; }
+		}
+		while (!flag);
+		return val;
 	}
 	
 	public List<User> getAllUsers() {
@@ -108,6 +145,12 @@ public class LibraryDAO {
 	public void storeItem(Item i) {
 		db.store(i);
 		db.commit();
+	}
+	
+	public void deleteUser(int id) throws Exception {
+		User proto = new User(id, null, null, null, null);
+		User u = (User)db.queryByExample(proto).next();
+		db.delete(u);
 	}
 }
 
