@@ -8,6 +8,7 @@ import com.db4o.config.EmbeddedConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Calendar;
 import java.util.LinkedList;
 
 @SuppressWarnings("rawtypes")
@@ -34,6 +35,8 @@ public class LibraryDAO {
 		config.common().objectClass(streaminglibrary.Playlist.class).objectField("items").cascadeOnUpdate(true);
 		config.common().objectClass(streaminglibrary.Item.class);
 		config.common().objectClass(streaminglibrary.ClassicalItem.class);
+		config.common().objectClass(Calendar.class).callConstructor(true);
+	    config.common().objectClass(Calendar.class).storeTransientFields(true);
 		db = Db4oEmbedded.openFile(config, file.getAbsolutePath());
 	}
 	
@@ -72,7 +75,7 @@ public class LibraryDAO {
 		int val = getNumberOfPlaylists() + 1;
 		boolean flag = false;
 		do {
-			Playlist proto = new Playlist(val, null, null);
+			Playlist proto = new Playlist(val, null, null, null);
 			if (db.queryByExample(proto).size() == 0) {
 				flag = true;
 			}
@@ -135,7 +138,7 @@ public class LibraryDAO {
 	}
 	
 	public Playlist getPlaylistByID(int id) {
-		Playlist proto = new Playlist(id, null, null);
+		Playlist proto = new Playlist(id, null, null, null);
 		ObjectSet result = db.queryByExample(proto);
 		if (result.size() > 0) {
 			return (Playlist)result.next();
@@ -162,7 +165,7 @@ public class LibraryDAO {
 		if (i != null) {
 			List<Item> itemList = new LinkedList<Item>();
 			itemList.add(i);
-			Playlist proto = new Playlist(0, null, itemList);
+			Playlist proto = new Playlist(0, null, null, itemList);
 			List<Playlist> playlists = db.queryByExample(proto);
 			return playlists;
 		}

@@ -1,6 +1,8 @@
 package streaminglibrary;
 
 import java.util.List;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -152,10 +154,12 @@ public class LibraryMenu {
 			List<Item> li3 = new LinkedList<Item>();
 			li3.add(i2);
 			li3.add(i4);
+			new GregorianCalendar();
 			//Create the playlists
-			Playlist p1 = new Playlist(1, u1, li1);
-			Playlist p2 = new Playlist(2, u2, li2);
-			Playlist p3 = new Playlist(3, u1, li3);
+			Calendar now = new GregorianCalendar(2016,3,26); //Back-date a bit for update confirmation!
+			Playlist p1 = new Playlist(1, u1, now, li1);
+			Playlist p2 = new Playlist(2, u2, now, li2);
+			Playlist p3 = new Playlist(3, u1, now, li3);
 			//Assign them to the users
 			u1.addPlaylist(p1);
 			u1.addPlaylist(p3);
@@ -231,7 +235,8 @@ public class LibraryMenu {
 			else { u = o; }
 			if (u != null) {
 				System.out.println("User Selected: " + u);
-				Playlist p = new Playlist(newPlaylistID, u);
+				Calendar now = new GregorianCalendar();
+				Playlist p = new Playlist(newPlaylistID, u, now);
 				do {
 					System.out.println("----------------------------");
 					ListAllItemsNotInPlaylist(p);
@@ -431,6 +436,7 @@ public class LibraryMenu {
 		try {
 			System.out.print("Enter Playlist ID to Update: ");
 			String input = inputReader.next();
+			Calendar now = new GregorianCalendar();
 			if (tryParseInt(input)) {
 				int selectedPlaylist = Integer.parseInt(input);
 				Playlist p = librarydao.getPlaylistByID(selectedPlaylist);
@@ -468,6 +474,7 @@ public class LibraryMenu {
 								input.charAt(0) != 'b' && input.charAt(0) != 'B');
 						
 						if (input.charAt(0) == 'f' || input.charAt(0) == 'F'){
+							p.setLastModified(now);
 							u.deletePlaylist(p);
 							u.addPlaylist(p);
 							librarydao.storeUser(u);
@@ -498,6 +505,7 @@ public class LibraryMenu {
 								input.charAt(0) != 'b' && input.charAt(0) != 'B');
 						
 						if (input.charAt(0) == 'f' || input.charAt(0) == 'F'){
+							p.setLastModified(now);
 							u.deletePlaylist(p);
 							u.addPlaylist(p);
 							librarydao.storeUser(u);
