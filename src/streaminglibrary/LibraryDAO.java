@@ -9,6 +9,7 @@ import com.db4o.query.Predicate;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class LibraryDAO {
@@ -125,7 +126,7 @@ public class LibraryDAO {
 		}
 	}
 	
-	public Playlist getPlaylistByID(int id) throws Exception {
+	public Playlist getPlaylistByID(int id) {
 		Playlist proto = new Playlist(id, null, null);
 		ObjectSet result = db.queryByExample(proto);
 		if (result.size() > 0) {
@@ -136,7 +137,33 @@ public class LibraryDAO {
 		}
 	}
 	
-	public Item getItemByID(int id) throws Exception {
+	public List<Playlist> getPlaylistsByUser(int userID) {
+		User u = getUserByID(userID);
+		if (u != null) {
+			Playlist proto = new Playlist(0, u, null);
+			List<Playlist> playlists = db.queryByExample(proto);
+			return playlists;
+		}
+		else {
+			return new LinkedList<Playlist>();
+		}
+	}
+	
+	public List<Playlist> getPlaylistsByItem(int itemID) {
+		Item i = getItemByID(itemID);
+		if (i != null) {
+			List<Item> itemList = new LinkedList<Item>();
+			itemList.add(i);
+			Playlist proto = new Playlist(0, null, itemList);
+			List<Playlist> playlists = db.queryByExample(proto);
+			return playlists;
+		}
+		else {
+			return new LinkedList<Playlist>();
+		}
+	}
+	
+	public Item getItemByID(int id) {
 		Item proto = new Item(id, null, null, 0);
 		ObjectSet result = db.queryByExample(proto);
 		if (result.size() > 0) {
@@ -162,17 +189,17 @@ public class LibraryDAO {
 		db.commit();
 	}
 	
-	public void updateUser(User nu) {
-		User u = getUserByID(nu.getUserID());
-		if (u != null) {
-			
-		}
-	}
-	
 	public void deleteUser(int id) throws Exception {
 		User proto = new User(id, null, null, null, null);
 		User u = (User)db.queryByExample(proto).next();
 		db.delete(u);
+	}
+	
+	public void deletePlaylist(int id) {
+		Playlist p = getPlaylistByID(id);
+		if (p != null) {
+			db.delete(p);
+		}
 	}
 }
 
