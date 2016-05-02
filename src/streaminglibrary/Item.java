@@ -22,11 +22,20 @@ public class Item {
 		artist = null;
 	}
 	
+	public Item(Object o) {
+		
+	}
+	
 	public Item(int itemID, String title, String artist, double length) {
 		this.itemID = itemID;
 		this.title = title;
 		this.artist = artist;
 		this.length = length;
+	}
+	
+	@Override
+	public int hashCode() {
+		return title.hashCode()*32 + artist.hashCode()*32;
 	}
 	
 	@Override

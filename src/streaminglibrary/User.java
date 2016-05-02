@@ -38,6 +38,14 @@ public class User {
 		this.playlists = new LinkedList<Playlist>();
 	}
 	
+	public User(Object o) {
+		
+	}
+	
+	public User(String username) {
+		
+	}
+	
 	public User(int userID, String username, String password, String email) {
 		this.userID = userID;
 		this.username = username;
@@ -57,6 +65,16 @@ public class User {
 	
 	public void addPlaylist(Playlist playlist) {
 		playlists.add(playlist);
+	}
+	
+	public void deletePlaylist(Playlist playlist) {
+		playlists.remove(playlist);
+	}
+	
+	@Override
+	public int hashCode() {
+		return username.hashCode()*32 + password.hashCode()*32 + 
+				email.hashCode()*1024;
 	}
 	
 	@Override

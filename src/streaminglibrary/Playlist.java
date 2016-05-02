@@ -28,10 +28,21 @@ public class Playlist {
 		this.items = new LinkedList<Item>();
 	}
 	
+	public Playlist(Object o) {
+	}
+	
 	public Playlist(int playlistID, User user, List<Item> items) {
 		this.playlistID = playlistID;
 		this.user = user;
 		this.items = items;
+	}
+	
+	public void addItem(Item item) {
+		items.add(item);
+	}
+	
+	public void removeItem(Item item) {
+		items.remove(item);
 	}
 	
 	@Override
@@ -47,7 +58,7 @@ public class Playlist {
 	
 	@Override
 	public String toString() {
-		return "Playlist(ID:" + getPlaylistID() + ", User:" + getUser() +
+		return "Playlist(ID:" + getPlaylistID() + ", User:" + getUser().getUsername() +
 				", Items:" + getItems() + ")";
 	}
 }

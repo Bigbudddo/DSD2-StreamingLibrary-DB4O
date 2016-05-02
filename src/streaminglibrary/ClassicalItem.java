@@ -11,10 +11,19 @@ public class ClassicalItem extends Item {
 		super();
 	}
 	
+	public ClassicalItem(Object o) {
+	}
+	
 	public ClassicalItem(int itemID, String title, String artist, 
 			String composer, double length) {
 		super(itemID, title, artist, length);
 		this.composer = composer;
+	}
+	
+	@Override
+	public int hashCode() {
+		return title.hashCode()*32 + artist.hashCode()*32 + 
+				composer.hashCode()*32;
 	}
 	
 	@Override
